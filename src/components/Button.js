@@ -1,4 +1,4 @@
 function LoadMoreBtn() {
-  return <button type="button"></button>;
+  return <button type="button" >Load more</button>;
 }
 export default LoadMoreBtn;

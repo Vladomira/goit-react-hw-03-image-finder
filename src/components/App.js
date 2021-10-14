@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { ToastContainer } from "react-toastify";
 import Searchbar from "./Searchbar";
 import ImageGallery from "./ImageGallery";
+// import LoadMoreBtn from './Button'
 
 class App extends Component {
   state = {
@@ -21,6 +22,7 @@ class App extends Component {
 
         <ImageGallery inputInfo={this.state.imgName} />
         <ToastContainer />
+         {/* <LoadMoreBtn/> */}
         {/* <Button> <Modal> */}
       </div>
     );

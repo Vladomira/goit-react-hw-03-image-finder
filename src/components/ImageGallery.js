@@ -1,12 +1,23 @@
-// import Prop-Types from 'prop-types';
+import PropTypes from 'prop-types';
 import React, { Component } from "react";
 import ErrorImg from "./ErrorImg.js";
 import ImageGalleryItem from "./ImageGalleryItem.js";
 import LoaderForImg from "./Loader";
 import FetchImgs from "./services/FetchImgs";
+import LoadMoreBtn from './Button'
+
 
 //
 class ImageGallery extends Component {
+  static defaultProps = {   
+  entriesImgs: PropTypes.shape({
+   hits: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    webformatURL: PropTypes.number.isRequired,
+    tags: PropTypes.string.isRequired
+  })
+}) 
+ };
   state = {
     entriesImgs: null,
     error: null,
@@ -43,7 +54,8 @@ class ImageGallery extends Component {
     }
     if (status === "resolved") {
       return (
-        <ul>
+      <> 
+      <ul>
           {entriesImgs.hits.map((el) => {
             return (
               <ImageGalleryItem
@@ -55,6 +67,8 @@ class ImageGallery extends Component {
             );
           })}
         </ul>
+        <LoadMoreBtn/>
+        </>
       );
     }
   }
