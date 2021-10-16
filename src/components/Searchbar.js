@@ -1,4 +1,4 @@
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import React, { Component } from "react";
 class Searchbar extends Component {
   state = {

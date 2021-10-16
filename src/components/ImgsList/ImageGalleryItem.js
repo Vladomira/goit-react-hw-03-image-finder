@@ -1,23 +1,23 @@
 import PropTypes from "prop-types";
 //
-function ImageGalleryItem({ webformatURL, largeImageURL, id, alt }) {
+function ImageGalleryItem({ webformatURL, largeImageURL, alt }) {
   // console.log(alt)
   return (
-    <li className="ImageGalleryItem">
-      <img
-        key={id}
-        width="240"
-        src={webformatURL}
-        alt={alt}
-        largeurl={largeImageURL}
-        className="ImageGalleryItem-image"
-      />
-    </li>
+    // <div>
+    <img
+      width="240"
+      src={webformatURL}
+      alt={alt}
+      largeurl={largeImageURL}
+      className="ImageGalleryItem-image"
+    />
+    // {/* </div> */}
   );
 }
-// ImageGalleryItem.propTypes = {
-//   webformatURL: PropTypes.string.isRequired,
-//   id: PropTypes.number,
-//   alt: PropTypes.string,
-// };
+ImageGalleryItem.propTypes = {
+  webformatURL: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
+  alt: PropTypes.string.isRequired,
+  largeImageURL: PropTypes.string.isRequired,
+};
 export default ImageGalleryItem;

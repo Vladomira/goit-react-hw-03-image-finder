@@ -33,17 +33,17 @@ class App extends Component {
       imgAPI
         .FetchImgs(nextName, page)
         .then((entriesImgs) => {
-          //   entriesImgs.hits.map(({ id, tags, webformatURL }) =>
-          //     // console.log(id, tags, webformatURL, largeImageURL)
-          //     this.setState({
-          //       // largeImageURL,
-          //       entriesImgs: [id, webformatURL, tags],
-          //       key: id,
-          //       // largeURL: largeImageURL,
-          //       status: "resolved",
-          //     })
-          //   );
-          this.setState({ entriesImgs, status: "resolved" });
+          const data = entriesImgs.hits.map(
+            ({ id, tags, webformatURL, largeImageURL }) => {
+              return {
+                id: id,
+                webformatURL: webformatURL,
+                tags: tags,
+                largeImageURL: largeImageURL,
+              };
+            }
+          );
+          this.setState({ entriesImgs: data, status: "resolved" });
         })
         .catch((error) => this.setState({ error, status: "reject" }));
     }
@@ -102,17 +102,6 @@ class App extends Component {
     const { entriesImgs, error, status, showModal, largeURL } = this.state;
     return (
       <div>
-        {status === "idle" && (
-          <p className="header">Please, type the image name</p>
-        )}
-
-        {status === " rejected" && (
-          <Error
-            message={error.message}
-            // `Some went wrong`
-          />
-        )}
-        {status === "pending" && <LoaderForImg />}
         <Searchbar onSubmit={this.handleFormSubmit} />
 
         {status === "resolved" && (
@@ -121,6 +110,17 @@ class App extends Component {
               entriesImgs={entriesImgs}
               openModal={this.toggleModalWindow}
             />
+            {status === "idle" && (
+              <p className="header">Please, type the image name</p>
+            )}
+
+            {status === " rejected" && (
+              <Error
+                message={error.message}
+                // `Some went wrong`
+              />
+            )}
+            {status === "pending" && <LoaderForImg />}
             <LoadMoreBtn onClick={this.fetchImgNext}>
               <Loader
                 type="Rings"
