@@ -1,4 +1,4 @@
-import ImageGalleryItem from "./ImageGalleryItem.js";
+import ImageGalleryItem from "./ImgsList/ImageGalleryItem";
 import defaultImg from "../errorImages/cat.jpg";
 
 //
