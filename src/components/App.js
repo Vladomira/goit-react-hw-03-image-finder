@@ -102,7 +102,9 @@ class App extends Component {
     const { entriesImgs, error, status, showModal, largeURL } = this.state;
     return (
       <div>
-        {status === "idle" && <p>Please, type the image name</p>}
+        {status === "idle" && (
+          <p className="header">Please, type the image name</p>
+        )}
 
         {status === " rejected" && (
           <Error
