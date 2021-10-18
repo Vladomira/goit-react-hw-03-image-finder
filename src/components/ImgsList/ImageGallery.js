@@ -3,25 +3,26 @@ import ImageGalleryItem from "./ImageGalleryItem";
 // import FetchImgs from "./services/FetchImgs";
 
 function ImageGallery({ entriesImgs, openModal }) {
+  // console.log(entriesImgs, "from g");
   return (
-    <>
-      <ul>
-        <li className="ImageGalleryItem">
-          {entriesImgs.map(({ id, webformatURL, largeImageURL, tags }) => {
-            return (
-              <ImageGalleryItem
-                key={id}
-                id={id}
-                webformatURL={webformatURL}
-                alt={tags}
-                onClick={openModal}
-                largeImageURL={largeImageURL}
-              />
-            );
-          })}
-        </li>
+    <div>
+      <ul className="ImageGallery">
+        {/* <li className="ImageGalleryItem"> */}
+        {entriesImgs.map(({ id, webformatURL, largeImageURL, tags }) => {
+          return (
+            <ImageGalleryItem
+              key={id}
+              id={id}
+              webformatURL={webformatURL}
+              alt={tags}
+              onClick={openModal}
+              largeImageURL={largeImageURL}
+            />
+          );
+        })}
+        {/* </li> */}
       </ul>
-    </>
+    </div>
   );
 }
 
@@ -34,6 +35,6 @@ ImageGallery.propTypes = {
       largeImageURL: PropTypes.string.isRequired,
     })
   ),
-  openModal: PropTypes.func.isRequired,
+  // openModal: PropTypes.func.isRequired,
 };
 export default ImageGallery;

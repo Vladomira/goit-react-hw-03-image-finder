@@ -3,15 +3,15 @@ import PropTypes from "prop-types";
 function ImageGalleryItem({ webformatURL, largeImageURL, alt }) {
   // console.log(alt)
   return (
-    // <div>
-    <img
-      width="240"
-      src={webformatURL}
-      alt={alt}
-      largeurl={largeImageURL}
-      className="ImageGalleryItem-image"
-    />
-    // {/* </div> */}
+    <li className="ImageGalleryItem">
+      <img
+        width="240"
+        src={webformatURL}
+        alt={alt}
+        largeurl={largeImageURL}
+        className="ImageGalleryItem-image"
+      />
+    </li>
   );
 }
 ImageGalleryItem.propTypes = {

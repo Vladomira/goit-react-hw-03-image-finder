@@ -1,15 +1,16 @@
 import React, { Component } from "react";
 import { ToastContainer } from "react-toastify";
-import Loader from "react-loader-spinner";
+// import Loader from "react-loader-spinner";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
-import Searchbar from "./Searchbar";
+import Searchbar from "./SeacrhBar/Searchbar";
 import ImageGallery from "./ImgsList/ImageGallery";
-import LoadMoreBtn from "./LoadMoreButton";
+import LoadMoreBtn from "./LoadMoreBtn/LoadMoreBtn";
 import LoaderForImg from "./Loader";
 import Error from "./Error.js";
 import imgAPI from "./services/FetchImgs";
 import Modal from "./Modal";
+import Container from "./Container/Container";
 import "./styles/Style.scss";
 
 class App extends Component {
@@ -20,89 +21,99 @@ class App extends Component {
     error: null,
     status: "idle",
     showModal: false,
-    largeURL: "",
+    // largeImageURL: "",
   };
   componentDidUpdate(prevProps, prevState) {
     const prevName = prevState.imgName;
     const nextName = this.state.imgName;
-    const { page } = this.state;
+    const { page, showModal } = this.state;
     //
     if (prevName !== nextName) {
       this.setState({ status: "pending" });
 
-      imgAPI
-        .FetchImgs(nextName, page)
-        .then((entriesImgs) => {
-          const data = entriesImgs.hits.map(
-            ({ id, tags, webformatURL, largeImageURL }) => {
-              return {
-                id: id,
-                webformatURL: webformatURL,
-                tags: tags,
-                largeImageURL: largeImageURL,
-              };
-            }
-          );
-          this.setState({ entriesImgs: data, status: "resolved" });
-        })
-        .catch((error) => this.setState({ error, status: "reject" }));
+      this.getImgFromFetch(nextName, page);
     }
-    //
-    if (prevProps.page !== page && page !== 1) {
-      this.fetchImgNext(nextName, page);
+    if (prevState.page !== page && page !== 1) {
+      this.setState({ status: "pending" });
+      this.getImgFromFetchOnBtn(nextName, page);
     }
-    if (prevProps.page && !prevProps.showModal) {
-      window.scrollTo({
-        top: document.documentElement.scrollHeight,
-        behavior: "smooth",
-      });
+    if (showModal) {
+      // this.setState({largeImageURL: })
+      this.toggleModalWindow();
     }
   }
-  // getImgs = (imgName, pageNumber) => {
-  //   FetchImgs(imgName, pageNumber)
-  //     .then(({ hits }) => {
-  //       this.setState({ entriesImgs: hits, status: "resolved" });
-  //     })
-  //     .catch(() => {
-  //       if (!imgName) {
-  //         this.setState({
-  //           error: "Something went wrong, please. try again",
-  //           status: "rejected",
-  //         });
-  //       }
-  //     });
-  // };
+  getData = (data) => {
+    return data.map(({ id, tags, webformatURL, largeImageURL }) => {
+      return {
+        id: id,
+        webformatURL: webformatURL,
+        tags: tags,
+        largeImageURL: largeImageURL,
+      };
+    });
+  };
 
+  getImgFromFetch = (imgName, pageNumber) => {
+    imgAPI
+      .FetchImgs(imgName, pageNumber)
+      .then(({ hits }) => {
+        const data = this.getData(hits);
+        this.setState({ entriesImgs: data, status: "resolved" });
+
+        if (!hits.length) {
+          alert("No such pictures, try again");
+          this.setState({
+            error: "Something went wrong, please. try again",
+            status: "rejected",
+          });
+        } else this.setState({ error: null });
+      })
+      .catch((error) => this.setState({ error, status: "rejected" }));
+  };
+  getImgFromFetchOnBtn = (imgName, page) => {
+    imgAPI
+      .FetchImgs(imgName, page)
+      .then(({ hits }) => {
+        const data = this.getData(hits);
+        this.setState((prev) => ({
+          entriesImgs: [...prev.entriesImgs, ...data],
+          status: "resolved",
+        }));
+        this.scroll();
+      })
+      .catch((error) => this.setState({ error, status: "reject" }));
+  };
+  scroll = () => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: "smooth",
+    });
+  };
+
+  pageIncrement = () => {
+    return this.setState({
+      page: this.state.page + 1,
+    });
+  };
   handleFormSubmit = (imgName) => {
     this.setState({ imgName, page: 1 });
   };
 
-  toggleModalWindow = () => {
+  toggleModalWindow = (url) => {
     this.setState(({ showModal }) => ({
       showModal: !showModal,
-      // largeURL: url,
+      largeURL: url,
     }));
-  };
-  fetchImgNext = (imgName, pageIncrement) => {
-    imgAPI.FetchImgs(imgName, pageIncrement).then(({ hits }) => {
-      console.log(hits);
-      // console.log(this.pageIncrement);
-      this.setState((prevState) => ({
-        entriesImgs: [...prevState.entriesImgs, ...hits],
-      }));
-    });
-  };
-  pageIncrement = ({ page }) => {
-    this.setState({
-      page: page + 1,
-    });
   };
 
   render() {
     const { entriesImgs, error, status, showModal, largeURL } = this.state;
     return (
-      <div>
+      <Container className="container">
         <Searchbar onSubmit={this.handleFormSubmit} />
+        {status === "idle" && (
+          <p className="header">Please, type the image name</p>
+        )}
 
         {status === "resolved" && (
           <>
@@ -110,26 +121,9 @@ class App extends Component {
               entriesImgs={entriesImgs}
               openModal={this.toggleModalWindow}
             />
-            {status === "idle" && (
-              <p className="header">Please, type the image name</p>
-            )}
-
-            {status === " rejected" && (
-              <Error
-                message={error.message}
-                // `Some went wrong`
-              />
-            )}
+            {status === " rejected" && <Error message={error.message} />}
             {status === "pending" && <LoaderForImg />}
-            <LoadMoreBtn onClick={this.fetchImgNext}>
-              <Loader
-                type="Rings"
-                color="#00BFFF"
-                height={80}
-                width={80}
-                timeout={3000}
-              />
-            </LoadMoreBtn>
+            <LoadMoreBtn onClick={this.pageIncrement}></LoadMoreBtn>
           </>
         )}
         {showModal && (
@@ -138,7 +132,7 @@ class App extends Component {
           </Modal>
         )}
         <ToastContainer autoClose={3000} />
-      </div>
+      </Container>
     );
   }
 }
@@ -147,3 +141,40 @@ export default App;
 // if (response.total === 0) {
 //   return console.log(`The picture ${nextName} isn't exist`);
 // }
+
+//
+// if (prevProps.page !== page && page !== 1) {
+//   this.fetchImgNext(nextName, page);
+// }
+// if (prevProps.page && !prevProps.showModal) {
+//   window.scrollTo({
+//     top: document.documentElement.scrollHeight,
+//     behavior: "smooth",
+//   });
+// }
+
+// ++++++
+// fetchImgNext = (imgName, pageIncrement) => {
+//   imgAPI.FetchImgs(imgName, pageIncrement).then(({ hits }) => {
+//     console.log(hits);
+//     // console.log(this.pageIncrement);
+//     this.setState((prevState) => ({
+//       entriesImgs: [...prevState.entriesImgs, ...hits],
+//     }));
+//   });
+// };
+
+// getImgs = (imgName, pageNumber) => {
+//   FetchImgs(imgName, pageNumber)
+//     .then(({ hits }) => {
+//       this.setState({ entriesImgs: hits, status: "resolved" });
+//     })
+//     .catch(() => {
+//       if (!imgName) {
+//         this.setState({
+//           error: "Something went wrong, please. try again",
+//           status: "rejected",
+//         });
+//       }
+//     });
+// };
