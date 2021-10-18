@@ -8,7 +8,7 @@ function ImageGalleryItem({ webformatURL, largeImageURL, alt }) {
         width="240"
         src={webformatURL}
         alt={alt}
-        largeurl={largeImageURL}
+        data-source={largeImageURL}
         className="ImageGalleryItem-image"
       />
     </li>

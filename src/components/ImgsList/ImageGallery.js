@@ -3,11 +3,12 @@ import ImageGalleryItem from "./ImageGalleryItem";
 // import FetchImgs from "./services/FetchImgs";
 
 function ImageGallery({ entriesImgs, openModal }) {
-  // console.log(entriesImgs, "from g");
   return (
     <div>
-      <ul className="ImageGallery">
-        {/* <li className="ImageGalleryItem"> */}
+      <ul
+        className="ImageGallery"
+        onClick={(e) => openModal(e.target.dataset.source)}
+      >
         {entriesImgs.map(({ id, webformatURL, largeImageURL, tags }) => {
           return (
             <ImageGalleryItem
@@ -15,12 +16,10 @@ function ImageGallery({ entriesImgs, openModal }) {
               id={id}
               webformatURL={webformatURL}
               alt={tags}
-              onClick={openModal}
               largeImageURL={largeImageURL}
             />
           );
         })}
-        {/* </li> */}
       </ul>
     </div>
   );

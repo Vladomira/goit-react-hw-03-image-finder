@@ -9,7 +9,7 @@ import LoadMoreBtn from "./LoadMoreBtn/LoadMoreBtn";
 import LoaderForImg from "./Loader";
 import Error from "./Error.js";
 import imgAPI from "./services/FetchImgs";
-import Modal from "./Modal";
+import Modal from "./Modal/Modal";
 import Container from "./Container/Container";
 import "./styles/Style.scss";
 
@@ -21,7 +21,7 @@ class App extends Component {
     error: null,
     status: "idle",
     showModal: false,
-    // largeImageURL: "",
+    largeImageURL: "",
   };
   componentDidUpdate(prevProps, prevState) {
     const prevName = prevState.imgName;
@@ -36,10 +36,6 @@ class App extends Component {
     if (prevState.page !== page && page !== 1) {
       this.setState({ status: "pending" });
       this.getImgFromFetchOnBtn(nextName, page);
-    }
-    if (showModal) {
-      // this.setState({largeImageURL: })
-      this.toggleModalWindow();
     }
   }
   getData = (data) => {
@@ -99,10 +95,11 @@ class App extends Component {
     this.setState({ imgName, page: 1 });
   };
 
-  toggleModalWindow = (url) => {
-    this.setState(({ showModal }) => ({
+  toggleModalWindow = (prop) => {
+    console.dir(prop);
+    return this.setState(({ showModal }) => ({
       showModal: !showModal,
-      largeURL: url,
+      largeImageURL: prop,
     }));
   };
 
@@ -152,29 +149,3 @@ export default App;
 //     behavior: "smooth",
 //   });
 // }
-
-// ++++++
-// fetchImgNext = (imgName, pageIncrement) => {
-//   imgAPI.FetchImgs(imgName, pageIncrement).then(({ hits }) => {
-//     console.log(hits);
-//     // console.log(this.pageIncrement);
-//     this.setState((prevState) => ({
-//       entriesImgs: [...prevState.entriesImgs, ...hits],
-//     }));
-//   });
-// };
-
-// getImgs = (imgName, pageNumber) => {
-//   FetchImgs(imgName, pageNumber)
-//     .then(({ hits }) => {
-//       this.setState({ entriesImgs: hits, status: "resolved" });
-//     })
-//     .catch(() => {
-//       if (!imgName) {
-//         this.setState({
-//           error: "Something went wrong, please. try again",
-//           status: "rejected",
-//         });
-//       }
-//     });
-// };
