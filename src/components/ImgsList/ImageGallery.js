@@ -34,6 +34,6 @@ ImageGallery.propTypes = {
       largeImageURL: PropTypes.string.isRequired,
     })
   ),
-  // openModal: PropTypes.func.isRequired,
+  openModal: PropTypes.func.isRequired,
 };
 export default ImageGallery;

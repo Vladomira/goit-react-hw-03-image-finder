@@ -10,7 +10,6 @@ class Searchbar extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    // const { imgName } = this.state;
     if (this.state.imgName.trim() === "") {
       alert("Please, type what do you want to see.");
       // toast("Please, type what do you want to see.");

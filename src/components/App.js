@@ -6,8 +6,8 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import Searchbar from "./SeacrhBar/Searchbar";
 import ImageGallery from "./ImgsList/ImageGallery";
 import LoadMoreBtn from "./LoadMoreBtn/LoadMoreBtn";
-import LoaderForImg from "./Loader";
-import Error from "./Error.js";
+import LoaderForImg from "./Loader/Loader";
+import Error from "./Error/Error.js";
 import imgAPI from "./services/FetchImgs";
 import Modal from "./Modal/Modal";
 import Container from "./Container/Container";
@@ -100,7 +100,7 @@ class App extends Component {
 
   toggleModalWindow = (prop) => {
     // console.dir(prop);
-    console.log(prop, "log");
+    // console.log(prop, "log");
     return this.setState(({ showModal }) => ({
       showModal: !showModal,
       largeImageURL: prop,
@@ -139,14 +139,3 @@ class App extends Component {
 }
 
 export default App;
-
-//
-// if (prevProps.page !== page && page !== 1) {
-//   this.fetchImgNext(nextName, page);
-// }
-// if (prevProps.page && !prevProps.showModal) {
-//   window.scrollTo({
-//     top: document.documentElement.scrollHeight,
-//     behavior: "smooth",
-//   });
-// }

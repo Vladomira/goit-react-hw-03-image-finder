@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 //
 function ImageGalleryItem({ webformatURL, largeImageURL, alt }) {
-  // console.log(alt)
   return (
     <li className="ImageGalleryItem">
       <img

@@ -1,5 +1,6 @@
-import ImageGalleryItem from "./ImgsList/ImageGalleryItem";
-import defaultImg from "../errorImages/cat.jpg";
+import PropTypes from "prop-types";
+import ImageGalleryItem from "../ImgsList/ImageGalleryItem";
+import defaultImg from "../images/cat.jpg";
 import Loader from "react-loader-spinner";
 //
 export default function LoaderForImg() {
@@ -18,3 +19,6 @@ export default function LoaderForImg() {
     </div>
   );
 }
+LoaderForImg.propTypes = {
+  webformatURL: PropTypes.string.isRequired,
+};
