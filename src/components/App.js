@@ -26,7 +26,7 @@ class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     const prevName = prevState.imgName;
     const nextName = this.state.imgName;
-    const { page, showModal } = this.state;
+    const { page, showModal, largeImageURL } = this.state;
     //
     if (prevName !== nextName) {
       this.setState({ status: "pending" });
@@ -36,6 +36,9 @@ class App extends Component {
     if (prevState.page !== page && page !== 1) {
       this.setState({ status: "pending" });
       this.getImgFromFetchOnBtn(nextName, page);
+    }
+    if (showModal) {
+      console.log(largeImageURL, "large");
     }
   }
   getData = (data) => {
@@ -96,7 +99,8 @@ class App extends Component {
   };
 
   toggleModalWindow = (prop) => {
-    console.dir(prop);
+    // console.dir(prop);
+    console.log(prop, "log");
     return this.setState(({ showModal }) => ({
       showModal: !showModal,
       largeImageURL: prop,
@@ -104,7 +108,7 @@ class App extends Component {
   };
 
   render() {
-    const { entriesImgs, error, status, showModal, largeURL } = this.state;
+    const { entriesImgs, error, status, showModal, largeImageURL } = this.state;
     return (
       <Container className="container">
         <Searchbar onSubmit={this.handleFormSubmit} />
@@ -125,7 +129,7 @@ class App extends Component {
         )}
         {showModal && (
           <Modal onClose={this.toggleModalWindow}>
-            <img src={largeURL} alt="" />
+            <img src={largeImageURL} alt="" />
           </Modal>
         )}
         <ToastContainer autoClose={3000} />
@@ -135,9 +139,6 @@ class App extends Component {
 }
 
 export default App;
-// if (response.total === 0) {
-//   return console.log(`The picture ${nextName} isn't exist`);
-// }
 
 //
 // if (prevProps.page !== page && page !== 1) {
