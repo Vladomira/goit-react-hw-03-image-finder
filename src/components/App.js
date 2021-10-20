@@ -1,18 +1,17 @@
 import React, { Component } from "react";
-import { ToastContainer } from "react-toastify";
-// import Loader from "react-loader-spinner";
+// import { ToastContainer } from "react-toastify";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-
 import Searchbar from "./SeacrhBar/Searchbar";
 import ImageGallery from "./ImgsList/ImageGallery";
 import LoadMoreBtn from "./LoadMoreBtn/LoadMoreBtn";
-import LoaderForImg from "./Loader/Loader";
+import Loader from "./Loader/Loader";
 import Error from "./Error/Error.js";
 import imgAPI from "./services/FetchImgs";
 import Modal from "./Modal/Modal";
 import Container from "./Container/Container";
 import "./styles/Style.scss";
 
+//
 class App extends Component {
   state = {
     imgName: "",
@@ -123,7 +122,7 @@ class App extends Component {
               openModal={this.toggleModalWindow}
             />
             {status === " rejected" && <Error message={error.message} />}
-            {status === "pending" && <LoaderForImg />}
+            {status === "pending" && <Loader />}
             <LoadMoreBtn onClick={this.pageIncrement}></LoadMoreBtn>
           </>
         )}
@@ -132,7 +131,7 @@ class App extends Component {
             <img src={largeImageURL} alt="" />
           </Modal>
         )}
-        <ToastContainer autoClose={3000} />
+        {/* <ToastContainer autoClose={3000} /> */}
       </Container>
     );
   }

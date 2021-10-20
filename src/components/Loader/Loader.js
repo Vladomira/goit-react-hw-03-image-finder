@@ -1,24 +1,26 @@
-import PropTypes from "prop-types";
-import ImageGalleryItem from "../ImgsList/ImageGalleryItem";
-import defaultImg from "../images/cat.jpg";
-import Loader from "react-loader-spinner";
+// import PropTypes from "prop-types";
+import React, { Component } from "react";
+import ReactLoaderSpinner from "react-loader-spinner";
 //
-export default function LoaderForImg() {
-  const webformatURL = defaultImg;
-  return (
-    <div>
-      <ImageGalleryItem webformatURL={webformatURL} />
-      <Loader
+
+export default class Loader extends Component {
+  render() {
+    return (
+      <ReactLoaderSpinner
         type="Rings"
-        color="#00BFFF"
+        color="#85309f"
         height={80}
         width={80}
-        timeout={3000}
+        timeout={3000} //3 secs
+        style={{
+          position: "fixed",
+          top: "50%",
+          left: "47%",
+        }}
       />
-      <p className="loading__text">Loading...</p>
-    </div>
-  );
+    );
+  }
 }
-LoaderForImg.propTypes = {
-  webformatURL: PropTypes.string.isRequired,
-};
+// LoaderBeforeCards.propTypes = {
+//   webformatURL: PropTypes.string.isRequired,
+// };
