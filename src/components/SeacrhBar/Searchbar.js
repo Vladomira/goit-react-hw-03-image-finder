@@ -12,7 +12,7 @@ class Searchbar extends Component {
     e.preventDefault();
     if (this.state.imgName.trim() === "") {
       alert("Please, type what do you want to see.");
-      // toast("Please, type what do you want to see.");
+      // toast.error("Please, type what do you want to see.");
       return;
     }
     this.props.onSubmit(this.state.imgName); // отпарвка данных

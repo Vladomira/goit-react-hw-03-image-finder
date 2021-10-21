@@ -1,26 +1,25 @@
 // import PropTypes from "prop-types";
 import React, { Component } from "react";
-import ReactLoaderSpinner from "react-loader-spinner";
-//
+import Loader from "react-loader-spinner";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
-export default class Loader extends Component {
+class SpinLoader extends Component {
   render() {
     return (
-      <ReactLoaderSpinner
-        type="Rings"
+      <Loader
+        type="BallTriangle"
         color="#85309f"
-        height={80}
-        width={80}
-        timeout={3000} //3 secs
+        height={100}
+        width={100}
+        timeout={3000}
         style={{
           position: "fixed",
-          top: "50%",
-          left: "47%",
+          top: "40%",
+          left: "50%",
         }}
+        // className="loader"
       />
     );
   }
 }
-// LoaderBeforeCards.propTypes = {
-//   webformatURL: PropTypes.string.isRequired,
-// };
+export default SpinLoader;

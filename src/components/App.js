@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 // import { ToastContainer } from "react-toastify";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+
 import Searchbar from "./SeacrhBar/Searchbar";
 import ImageGallery from "./ImgsList/ImageGallery";
 import LoadMoreBtn from "./LoadMoreBtn/LoadMoreBtn";
-import Loader from "./Loader/Loader";
+import SpinLoader from "./Loader/Loader";
 import Error from "./Error/Error.js";
-import imgAPI from "./services/FetchImgs";
+import FetchImgs from "./services/FetchImgs";
 import Modal from "./Modal/Modal";
 import Container from "./Container/Container";
 import "./styles/Style.scss";
@@ -14,73 +15,68 @@ import "./styles/Style.scss";
 //
 class App extends Component {
   state = {
+    total: [],
     imgName: "",
-    entriesImgs: null,
+    entriesImgs: [],
     page: 1,
-    error: null,
+    error: "",
     status: "idle",
     showModal: false,
     largeImageURL: "",
+    forLoadMore: false,
   };
   componentDidUpdate(prevProps, prevState) {
     const prevName = prevState.imgName;
     const nextName = this.state.imgName;
-    const { page, showModal, largeImageURL } = this.state;
+    const { page } = this.state;
     //
     if (prevName !== nextName) {
-      this.setState({ status: "pending" });
+      this.setState({ entriesImgs: [], page: 1, status: "pending" });
 
       this.getImgFromFetch(nextName, page);
     }
     if (prevState.page !== page && page !== 1) {
-      this.setState({ status: "pending" });
-      this.getImgFromFetchOnBtn(nextName, page);
-    }
-    if (showModal) {
-      console.log(largeImageURL, "large");
+      this.getImgFromFetch(nextName, page);
     }
   }
-  getData = (data) => {
-    return data.map(({ id, tags, webformatURL, largeImageURL }) => {
-      return {
-        id: id,
-        webformatURL: webformatURL,
-        tags: tags,
-        largeImageURL: largeImageURL,
-      };
-    });
-  };
 
   getImgFromFetch = (imgName, pageNumber) => {
-    imgAPI
-      .FetchImgs(imgName, pageNumber)
-      .then(({ hits }) => {
-        const data = this.getData(hits);
-        this.setState({ entriesImgs: data, status: "resolved" });
-
-        if (!hits.length) {
+    FetchImgs(imgName, pageNumber)
+      .then((entriesImgs) => {
+        if (!entriesImgs.hits.length) {
           alert("No such pictures, try again");
           this.setState({
-            error: "Something went wrong, please. try again",
+            error: "Something went wrong, please try again",
             status: "rejected",
           });
-        } else this.setState({ error: null });
-      })
-      .catch((error) => this.setState({ error, status: "rejected" }));
-  };
-  getImgFromFetchOnBtn = (imgName, page) => {
-    imgAPI
-      .FetchImgs(imgName, page)
-      .then(({ hits }) => {
-        const data = this.getData(hits);
-        this.setState((prev) => ({
-          entriesImgs: [...prev.entriesImgs, ...data],
-          status: "resolved",
-        }));
+        } else {
+          const data = entriesImgs.hits.map(
+            ({ id, tags, webformatURL, largeImageURL }) => {
+              return {
+                id,
+                webformatURL,
+                tags,
+                largeImageURL,
+              };
+            }
+          );
+          this.setState((prevState) => ({
+            entriesImgs: [...prevState.entriesImgs, ...data],
+            status: "resolved",
+            forLoadMore: true,
+          }));
+        }
+
         this.scroll();
       })
-      .catch((error) => this.setState({ error, status: "reject" }));
+      .catch((error) =>
+        this.setState({
+          error,
+          status: "rejected",
+        })
+      );
   };
+
   scroll = () => {
     window.scrollTo({
       top: document.documentElement.scrollHeight,
@@ -98,8 +94,6 @@ class App extends Component {
   };
 
   toggleModalWindow = (prop) => {
-    // console.dir(prop);
-    // console.log(prop, "log");
     return this.setState(({ showModal }) => ({
       showModal: !showModal,
       largeImageURL: prop,
@@ -107,29 +101,43 @@ class App extends Component {
   };
 
   render() {
-    const { entriesImgs, error, status, showModal, largeImageURL } = this.state;
+    const {
+      entriesImgs,
+      error,
+      status,
+      showModal,
+      largeImageURL,
+      forLoadMore,
+    } = this.state;
     return (
       <Container className="container">
         <Searchbar onSubmit={this.handleFormSubmit} />
         {status === "idle" && (
           <p className="header">Please, type the image name</p>
         )}
+        {status === "pending" && (
+          <>
+            <ImageGallery
+              entriesImgs={entriesImgs}
+              openModal={this.toggleModalWindow}
+            />
+            <SpinLoader />
+          </>
+        )}
 
+        {status === " rejected" && <Error message={error} />}
         {status === "resolved" && (
           <>
             <ImageGallery
               entriesImgs={entriesImgs}
               openModal={this.toggleModalWindow}
             />
-            {status === " rejected" && <Error message={error.message} />}
-            {status === "pending" && <Loader />}
-            <LoadMoreBtn onClick={this.pageIncrement}></LoadMoreBtn>
+            {forLoadMore && <LoadMoreBtn onClick={this.pageIncrement} />}
           </>
         )}
+
         {showModal && (
-          <Modal onClose={this.toggleModalWindow}>
-            <img src={largeImageURL} alt="" />
-          </Modal>
+          <Modal onClose={this.toggleModalWindow} img={largeImageURL} />
         )}
         {/* <ToastContainer autoClose={3000} /> */}
       </Container>
@@ -138,3 +146,16 @@ class App extends Component {
 }
 
 export default App;
+// getImgFromFetchOnBtn = (imgName, page) => {
+//   imgAPI
+//     .FetchImgs(imgName, page)
+//     .then(({ hits }) => {
+//       const data = this.getData(hits);
+//       this.setState((prev) => ({
+//         entriesImgs: [...prev.entriesImgs, ...data],
+//         status: "resolved",
+//       }));
+//       this.scroll();
+//     })
+//     .catch((error) => this.setState({ error, status: "reject" }));
+// };
