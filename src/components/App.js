@@ -87,6 +87,7 @@ class App extends Component {
   pageIncrement = () => {
     return this.setState({
       page: this.state.page + 1,
+      status: "pending",
     });
   };
   handleFormSubmit = (imgName) => {
@@ -135,7 +136,6 @@ class App extends Component {
             {forLoadMore && <LoadMoreBtn onClick={this.pageIncrement} />}
           </>
         )}
-
         {showModal && (
           <Modal onClose={this.toggleModalWindow} img={largeImageURL} />
         )}
